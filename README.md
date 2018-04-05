@@ -2,9 +2,13 @@
 The 433-wi-pi is a project aimed at creating a low power raspberry pi based wifi and rtl_433 logger.
 
 Folders:
+
       Scripts - contains scripts for tieing together services and making the raspberry pi manageable.
+      
       systemd - systemd service configuration scripts.
+      
       services - /etc service configuration files (placement in etc varies)
+      
       Testing - holding place for scripts and notes that need testing
   
 Presentation (work in progress)
