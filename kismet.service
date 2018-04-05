@@ -4,6 +4,6 @@ After=gpsd.service multi-user.target
 
 [Service]
 SuccessExitStatus=0 1
-ExecStart=/usr/bin/kismet_server -s
+ExecStart=/usr/local/bin/kismet_service.sh
 Restart=always
 RestartSec=5
