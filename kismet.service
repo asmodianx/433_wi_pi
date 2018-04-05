@@ -1,0 +1,9 @@
+[Unit]
+Description=Kismet server
+After=gpsd.service multi-user.target
+
+[Service]
+SuccessExitStatus=0 1
+ExecStart=/usr/bin/kismet_server -s
+Restart=always
+RestartSec=5
