@@ -48,7 +48,13 @@ pico /etc/kismet/kismet.conf
 Add:
 ncsource=wlan0
 logprefix=/var/log/kismet
-syslogtype=all
+
+##*** this enables kismet to use the syslog plugin and sends all alerts to syslog in addition to whatever the service generates
+##*** meaning this generates duplicate events. I made a change to the start up script to run a script which splices in gps info with the console information
+##*** though this will generate some log junk with it with the kismet start up and driver error messaages  also in new versions
+##*** this plugin wasnt working.  In the future we will be using only kismet for all sensor sources and we will need to use
+##*** a logging agent to collect the kismet netxml logs and to parse and forward to a dedicated logging server (splunk, elkstack, graylog ...etc)
+#syslogtype=all
 
 Change:
 gps=false to gps=true
