@@ -113,6 +113,7 @@ mkdir build
 cd build
 cmake ..
 make all
+make install
 
 create script:
 pico /usr/local/bin/rtl_433.sh
