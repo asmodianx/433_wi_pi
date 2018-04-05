@@ -1,83 +1,81 @@
-Steps for building the 433-wi-pi
+Steps for building the 433-wi-pi mobile sigint sensor
 
-
-mobile sigint sensor
-
-apt-get install gpsd chrony gpsd-clients kismet \
-kismet-plugins git libtool libusb-1.0.0-dev librtlsdr-dev \
-rtl-sdr build-essential autoconf cmake pkg-config
+Install pre requisites:
+        apt-get install gpsd chrony gpsd-clients kismet \
+        kismet-plugins git libtool libusb-1.0.0-dev librtlsdr-dev \
+        rtl-sdr build-essential autoconf cmake pkg-config
 
 Objectives:
 ==========================
 configure gps
 
 pico /etc/default/gpsd
-# Default settings for the gpsd init script and the hotplug wrapper.
-
-# Start the gpsd daemon automatically at boot time
-START_DAEMON="true"
-
-# Use USB hotplugging to add new USB devices automatically to the daemon
-USBAUTO="true"
-
-# Devices gpsd should collect to at boot time.
-# They need to be read/writeable, either by user gpsd or the group dialout.
-DEVICES="/dev/ttyACM0"
-
-# Other options you want to pass to gpsd
-GPSD_OPTIONS="-n -F /tmp/gpsd.sock"
+        # Default settings for the gpsd init script and the hotplug wrapper.
+        # Start the gpsd daemon automatically at boot time
+        START_DAEMON="true"
+        # Use USB hotplugging to add new USB devices automatically to the daemon
+        USBAUTO="true"
+        # Devices gpsd should collect to at boot time.
+        # They need to be read/writeable, either by user gpsd or the group dialout.
+        DEVICES="/dev/ttyACM0"
+        # Other options you want to pass to gpsd
+        GPSD_OPTIONS="-n -F /tmp/gpsd.sock"
 ===========================
 configure chronyd
 pico /etc/chrony/chrony.conf
 
-pool 2.debian.pool.ntp.org iburst
-keyfile /etc/chrony/chrony.keys
-driftfile /var/lib/chrony/chrony.drift
-logdir /var/log/chrony
-maxupdateskew 100.0
-hwclockfile /etc/adjtime
-rtcsync
-allow
-makestep 1 3
-refclock SHM 0 refid GPS precision 1e-1 offset 0.232 delay 0.2
-refclock SOCK /var/run/chrony/chrony.ttyACM0.sock refid PPS
+        pool 2.debian.pool.ntp.org iburst
+        keyfile /etc/chrony/chrony.keys
+        driftfile /var/lib/chrony/chrony.drift
+        logdir /var/log/chrony
+        maxupdateskew 100.0
+        hwclockfile /etc/adjtime
+        rtcsync
+        allow
+        makestep 1 3
+        refclock SHM 0 refid GPS precision 1e-1 offset 0.232 delay 0.2
+        refclock SOCK /var/run/chrony/chrony.ttyACM0.sock refid PPS
 =============================
 configure kismet
 pico /etc/kismet/kismet.conf
 
 Add:
-ncsource=wlan0
-logprefix=/var/log/kismet
+        ncsource=wlan0
+        logprefix=/var/log/kismet
 
 ##*** this enables kismet to use the syslog plugin and sends all alerts to syslog in addition to whatever the service generates
 ##*** meaning this generates duplicate events. I made a change to the start up script to run a script which splices in gps info with the console information
 ##*** though this will generate some log junk with it with the kismet start up and driver error messaages  also in new versions
 ##*** this plugin wasnt working.  In the future we will be using only kismet for all sensor sources and we will need to use
 ##*** a logging agent to collect the kismet netxml logs and to parse and forward to a dedicated logging server (splunk, elkstack, graylog ...etc)
-#syslogtype=all
+        #syslogtype=all
 
 Change:
-gps=false to gps=true
+        gps=false to gps=true
 
 (kismet does not work with Raspi zero or 3 wifi)
 
 optional for bluetooth add:
-ncsource=hci0
+        ncsource=hci0
+create service script:
+pico /usr/local/bin/kismet_service.sh
+        #!/bin/bash
+        /usr/bin/kismet_server|/usr/local/bin/gps_filter.sh|logger -t kismet
 
 create service file:
 pico /etc/systemd/system/kismet.service
 
-[Unit]
-Description=Kismet server
-After=gpsd.service multi-user.target
+        [Unit]
+        Description=Kismet server
+        After=gpsd.service multi-user.target
 
-[Service]
-SuccessExitStatus=0 1
-ExecStart=/usr/bin/kismet_server -s
-Restart=always
-RestartSec=5
+        [Service]
+        SuccessExitStatus=0 1
+        ExecStart=/usr/local/bin/kismet_service.sh
+        Restart=always
+        RestartSec=5
 
-[Install]
+        [Install]
 ===========================================
 rtl_433 gps log
 
@@ -106,35 +104,33 @@ crontab -e
 =================================
 install rtl_433
 compile:
-git clone https://github.com/merbanan/rtl_433.git
-cd rtl_433
-mkdir build
-cd build
-cmake ..
-make all
-make install
+        git clone https://github.com/merbanan/rtl_433.git
+        cd rtl_433
+        mkdir build
+        cd build
+        cmake ..
+        make all
+        make install
 
 create script:
 pico /usr/local/bin/rtl_433.sh
-
-(see above) 
-rtl_433.sh
-/usr/local/bin/rtl_433 -F json -G|/usr/local/bin/gps_filter.sh|logger -t rtl_433
+        #!/bin/bash
+        /usr/local/bin/rtl_433 -F json -G|/usr/local/bin/gps_filter.sh|logger -t rtl_433
 
 create service:
 pico /etc/systemd/system/rtl_433.service
 
-[Unit]
-Description=rtl_433
-After=network.target auditd.service
+        [Unit]
+        Description=rtl_433
+        After=network.target auditd.service
 
-[Service]
-SuccessExitStatus=0 1
-ExecStart=/usr/local/bin/rtl_433.sh
-Restart=always
-RestartSec=3
-[Install]
-WantedBy=multi-user.targetmake install
+        [Service]
+        SuccessExitStatus=0 1
+        ExecStart=/usr/local/bin/rtl_433.sh
+        Restart=always
+        RestartSec=3
+        [Install]
+        WantedBy=multi-user.targetmake install
 
 service:
 =================================
@@ -143,58 +139,57 @@ log gps:
 crontab -e
 
 add:
-*/2 * * * * gpspipe -w|grep -m 1 "TPV"|logger
+        */2 * * * * gpspipe -w|grep -m 1 "TPV"|logger
 
 ====================================
 save logfiles
 pico /etc/fstab
 add:
-/dev/sda1 /mnt vfat defaults,user,noauto 0 0
+        /dev/sda1 /mnt vfat defaults,user,noauto 0 0
 
 pico /usr/local/bin/button.py
 
 Add momentary button leads to pin's 9 and 11
 
-#!/usr/bin/python
-import RPi.GPIO as GPIO
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-if GPIO.input(17):
-        print "0"
-else:
-        print "1"
-
-GPIO.cleanup()
-
+        #!/usr/bin/python
+        import RPi.GPIO as GPIO
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        if GPIO.input(17):
+                print "0"
+        else:
+                print "1"
+        
+        GPIO.cleanup()
+        
 pico /usr/local/bin/record_shutdown.sh
-#!/bin/bash
-BUTTON=`/usr/local/bin/button.py`
-if [ -f /tmp/shutdown ]; then
-        echo "Already shutting down"
-else
-        touch /tmp/shutdown
-        if [ $BUTTON = "1" ]; then
-                mount /mnt
-                rm /mnt/*.tgz
-                /root/logs.sh
-                sync
-                umount /mnt
-                sync
-                rm /tmp/shutdown
-                halt -p
+        #!/bin/bash
+        BUTTON=`/usr/local/bin/button.py`
+        if [ -f /tmp/shutdown ]; then
+                echo "Already shutting down"
         else
-                echo "Button is $BUTTON, Not shutting down"
+                touch /tmp/shutdown
+                if [ $BUTTON = "1" ]; then
+                        mount /mnt
+                        rm /mnt/*.tgz
+                        /root/logs.sh
+                        sync
+                        umount /mnt
+                        sync
+                        rm /tmp/shutdown
+                        halt -p
+                else
+                        echo "Button is $BUTTON, Not shutting down"
+                fi
         fi
-fi
-
 
 =======================================
 
 Enable services:
-systemctl enable rtl_433
-systemctl enable kismet
-systemctl enable chrony
-systemctl enable gpsd
+        systemctl enable rtl_433
+        systemctl enable kismet
+        systemctl enable chrony
+        systemctl enable gpsd
 ===========================================
 RTC
 adafruit ds1307
@@ -240,21 +235,14 @@ optional rf heatmap
 create script
 pico /usr/local/bin/rtl_power.sh
 
-#!/bin/bash
-DATE=`date +%Y%m%d%H%M`
-service rtl_433 stop
-sleep 2
-rtl_power -f 100M:1G:1M -i 5m -1 /var/log/rtl_power/$DATE.csv
-service rtl_433 restart
-
-
+        #!/bin/bash
+        DATE=`date +%Y%m%d%H%M`
+        service rtl_433 stop
+        sleep 2
+        rtl_power -f 100M:1G:1M -i 5m -1 /var/log/rtl_power/$DATE.csv
+        service rtl_433 restart
 
 create crontab
-
 crontab -e
 add:
-0 */1 * * *    /usr/local/bin/rtl_power.sh
------------------------------------------------
-you can use 
-https://www.rtl-sdr.com/rtl-gopow-new-heat-map-tool/
-to create an rf heat map.
+        0 */1 * * *    /usr/local/bin/rtl_power.sh
