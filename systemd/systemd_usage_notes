@@ -1,0 +1,14 @@
+Notes on working with systemd in respbian:
+
+Enable services:
+        systemctl enable rtl_433
+        systemctl enable kismet
+        systemctl enable chrony
+        systemctl enable gpsd
+        
+reload services after .system file has been changed
+        systemctl daemon-reload
+
+reprocess changes to system files
+         systemctl daemon-reexec
+         
