@@ -229,20 +229,4 @@ sudo hwclock -D -r
 write hw time
 sudo hwclock -w
 
-========================================
-optional rf heatmap
 
-create script
-pico /usr/local/bin/rtl_power.sh
-
-        #!/bin/bash
-        DATE=`date +%Y%m%d%H%M`
-        service rtl_433 stop
-        sleep 2
-        rtl_power -f 100M:1G:1M -i 5m -1 /var/log/rtl_power/$DATE.csv
-        service rtl_433 restart
-
-create crontab
-crontab -e
-add:
-        0 */1 * * *    /usr/local/bin/rtl_power.sh
