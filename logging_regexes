@@ -1,0 +1,6 @@
+# Update me!
+
+#GROK patterns for Kismet syslog (Graylog)
+Detected new managed network \"%{DATA:ssid}\"\, BSSID %{MAC:bssid}\, encryption %{WORD:encryption}\, channel %{NUMBER:channel}\, %{NUMBER:speed}
+Detected new probe network \"%{DATA:ssid}\"\, BSSID %{MAC:bssid}\, encryption %{WORD:encryption}\, channel %{NUMBER:channel}\, %{NUMBER:speed}
+
