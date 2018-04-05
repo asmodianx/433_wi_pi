@@ -1,12 +1,5 @@
 Steps for building the 433-wi-pi
 
-# install raspbian
-# install tool chain, compiler, clients
-# add custom service profiles
-# configure GPS and Chrony
-# configure Kismet
-# build, wire and configure RTC
-# build, wire and configure Shutdown button
 
 mobile sigint sensor
 
