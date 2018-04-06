@@ -1,0 +1,8 @@
+        [Unit]
+        Description=Python GPSD Syslog
+        After=gpsd.service multi-user.target
+        [Service]
+        SuccessExitStatus=0 1
+        ExecStart=/usr/local/bin/gpsd_syslogd.py
+        [Install]
+        WantedBy=multi-user.target
