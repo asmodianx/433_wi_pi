@@ -38,7 +38,7 @@ https://github.com/asmodianx/433_wi_pi/wiki/log-gps
 
 https://github.com/asmodianx/433_wi_pi/wiki/configure-gps-log
 
-https://github.com/asmodianx/433_wi_pi/wiki/configure-gpsd-syslog
+https://github.com/asmodianx/433_wi_pi/wiki/configure-gpsd_syslog
 
 https://github.com/asmodianx/433_wi_pi/wiki/configure-logfile-saving-on-graceful-shutdown
 
