@@ -194,6 +194,7 @@ pico /etc/rsyslog.d/00-433wipi.conf
 
 
 =======================================
+Chmod 755 /usr/local/bin/*
 
 Enable services:
         systemctl enable rtl_433
