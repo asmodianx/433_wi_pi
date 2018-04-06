@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ## *** UDP SYSLOG Server that appends GPSD location ***
-# Its hacked together from several different sources, some of which unattributed
+# Its hacked together from several different sources
 
 
 
