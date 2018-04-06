@@ -16,7 +16,7 @@ Folders:
 Presentation (work in progress)
 https://docs.google.com/presentation/d/1ZjhOf2EoTb7HwC2VWtuHLnVpn_eJ30nsIdlAV1HaV3w/edit?usp=sharing
 
-First check out the hardware you need: https://github.com/asmodianx/433_wi_pi/blob/master/Hardware
+First check out the hardware you need: https://github.com/asmodianx/433_wi_pi/wiki/Hardware
 
 Install Raspbian Linux on the Pi
 
