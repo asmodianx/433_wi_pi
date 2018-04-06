@@ -21,3 +21,20 @@ First check out the hardware you need: https://github.com/asmodianx/433_wi_pi/wi
 Install Raspbian Linux on the Pi
 
 Then Go through the steps needed to prepare the device : https://github.com/asmodianx/433_wi_pi/wiki
+
+https://github.com/asmodianx/433_wi_pi/wiki/Hardware
+https://github.com/asmodianx/433_wi_pi/wiki/raspbian-pre-requisites
+https://github.com/asmodianx/433_wi_pi/wiki/configure-gpsd
+https://github.com/asmodianx/433_wi_pi/wiki/configure-chrony
+https://github.com/asmodianx/433_wi_pi/wiki/configure-kismet
+https://github.com/asmodianx/433_wi_pi/wiki/install-and-configure-rtl-433
+https://github.com/asmodianx/433_wi_pi/wiki/log-gps
+https://github.com/asmodianx/433_wi_pi/wiki/configure-gps-log
+https://github.com/asmodianx/433_wi_pi/wiki/configure-gpsd-syslog
+https://github.com/asmodianx/433_wi_pi/wiki/configure-logfile-saving-on-graceful-shutdown
+https://github.com/asmodianx/433_wi_pi/wiki/Raspberry-pi-Real-time-clock
+
+
+https://github.com/asmodianx/433_wi_pi/wiki/Logging-Extraction-Notes
+
+https://github.com/asmodianx/433_wi_pi/wiki/script-and-service-post-configuration
