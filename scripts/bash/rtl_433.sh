@@ -1,2 +1,2 @@
 #!/bin/bash
-/usr/local/bin/rtl_433 -F json -G|/usr/local/bin/gps_filter.sh|logger -t rtl_433
+/usr/local/bin/rtl_433 -F json -G|logger -t rtl_433
