@@ -20,4 +20,4 @@ First check out the hardware you need: https://github.com/asmodianx/433_wi_pi/bl
 
 Install Raspbian Linux on the Pi
 
-Then Go through the steps needed to prepare the device : https://github.com/asmodianx/433_wi_pi/blob/master/Build%20Steps
+Then Go through the steps needed to prepare the device : https://github.com/asmodianx/433_wi_pi/wiki
