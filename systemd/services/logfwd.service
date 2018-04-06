@@ -1,0 +1,8 @@
+        [Unit]
+        Description=Seckc log DEMO forwarder
+        After=gpsd.service gpsd_syslog.service multi-user.target 
+        [Service]
+        SuccessExitStatus=0 1
+        ExecStart=/usr/local/bin/log_fwd.sh
+        [Install]
+        WantedBy=multi-user.target
