@@ -2,6 +2,7 @@
 The 433-wi-pi is a project aimed at creating a low power raspberry pi based wifi and rtl_433 logger.
 
 Folders:
+      rsyslogd - rsyslog configuration files.
 
       Scripts - contains scripts for tieing together services and making the raspberry pi manageable.
       
