@@ -137,10 +137,9 @@ pico /etc/fstab
 add:
         /dev/sda1 /mnt vfat defaults,user,noauto 0 0
 
-pico /usr/local/bin/button.py
-
 Add momentary button leads to pin's 9 and 11
 
+pico /usr/local/bin/button.py
         #!/usr/bin/python
         import RPi.GPIO as GPIO
         GPIO.setmode(GPIO.BCM)
