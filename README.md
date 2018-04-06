@@ -32,7 +32,7 @@ https://github.com/asmodianx/433_wi_pi/wiki/configure-chrony
 
 https://github.com/asmodianx/433_wi_pi/wiki/configure-kismet
 
-https://github.com/asmodianx/433_wi_pi/wiki/install-and-configure-rtl-433
+https://github.com/asmodianx/433_wi_pi/wiki/install-and-configure-rtl_433
 
 https://github.com/asmodianx/433_wi_pi/wiki/log-gps
 
