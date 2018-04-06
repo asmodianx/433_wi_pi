@@ -42,13 +42,7 @@ pico /etc/kismet/kismet.conf
 Add:
         ncsource=wlan0
         logprefix=/var/log/kismet
-
-##*** this enables kismet to use the syslog plugin and sends all alerts to syslog in addition to whatever the service generates
-##*** meaning this generates duplicate events. I made a change to the start up script to run a script which splices in gps info with the console information
-##*** though this will generate some log junk with it with the kismet start up and driver error messaages  also in new versions
-##*** this plugin wasnt working.  In the future we will be using only kismet for all sensor sources and we will need to use
-##*** a logging agent to collect the kismet netxml logs and to parse and forward to a dedicated logging server (splunk, elkstack, graylog ...etc)
-        #syslogtype=all
+        syslogtype=all
 
 Change:
         gps=false to gps=true
@@ -57,10 +51,6 @@ Change:
 
 optional for bluetooth add:
         ncsource=hci0
-create service script:
-pico /usr/local/bin/kismet_service.sh
-        #!/bin/bash
-        /usr/bin/kismet_server|/usr/local/bin/gps_filter.sh|logger -t kismet
 
 create service file:
 pico /etc/systemd/system/kismet.service
@@ -71,7 +61,7 @@ pico /etc/systemd/system/kismet.service
 
         [Service]
         SuccessExitStatus=0 1
-        ExecStart=/usr/local/bin/kismet_service.sh
+        ExecStart=/usr/bin/kismet_server -s
         Restart=always
         RestartSec=5
 
@@ -115,7 +105,7 @@ compile:
 create script:
 pico /usr/local/bin/rtl_433.sh
         #!/bin/bash
-        /usr/local/bin/rtl_433 -F json -G|/usr/local/bin/gps_filter.sh|logger -t rtl_433
+        /usr/local/bin/rtl_433 -F json -G|logger -t rtl_433
 
 create service:
 pico /etc/systemd/system/rtl_433.service
@@ -139,7 +129,7 @@ log gps:
 crontab -e
 
 add:
-        */2 * * * * gpspipe -w|grep -m 1 "TPV"|logger
+        */2 * * * * cat /tmp/gps.txt|logger
 
 ====================================
 save logfiles
@@ -184,12 +174,34 @@ pico /usr/local/bin/record_shutdown.sh
         fi
 
 =======================================
+gpsd_syslog.py (see github file)
+
+pico /etc/systemd/system/gpsd_syslog.service
+        [Unit]
+        Description=Python GPSD Syslog
+        After=gpsd.service multi-user.target
+        [Service]
+        SuccessExitStatus=0 1
+        ExecStart=/usr/local/bin/gpsd_syslogd.py
+        [Install]
+        WantedBy=multi-user.target
+
+pico /etc/rsyslog.d/00-433wipi.conf
+        :syslogtag, contains, "rtl_433"
+        @127.0.0.1:2514
+        :syslogtag, contains, "seckc_wi_pi"
+        @127.0.0.1:2514
+
+
+=======================================
 
 Enable services:
         systemctl enable rtl_433
         systemctl enable kismet
         systemctl enable chrony
         systemctl enable gpsd
+        systemctl enable gpsd_syslog
+        
 ===========================================
 RTC
 adafruit ds1307
