@@ -38,7 +38,7 @@ class SyslogUDPHandler(SocketServer.BaseRequestHandler):
         def handle(self):
                 data = bytes.decode(self.request[0].strip()) + "(" +str(gpsd.fix.latitude) + "," + str(gpsd.fix.longitude) + ")"
                 socket = self.request[1]
-                print( "%s : " % self.client_address[0], str(data))
+                #print( "%s : " % self.client_address[0], str(data)) # not needed
                 logging.info(str(data))
 
 #set configuration
