@@ -6,13 +6,14 @@
 
 
 #import libraries
+import logging
 import os
-from gps import *
-from time import *
 import time
 import threading
-import logging
 import SocketServer
+#from logging.handlers import SysLogHandler
+from gps import *
+from time import *
 
  
 gpsd = None #seting the global variable
@@ -40,6 +41,7 @@ class SyslogUDPHandler(SocketServer.BaseRequestHandler):
                 socket = self.request[1]
                 #print( "%s : " % self.client_address[0], str(data)) # not needed
                 logging.info(str(data))
+         
 
 #set configuration
 LOG_FILE = '/var/log/gpsd_433wipi_logs.log'
@@ -50,7 +52,15 @@ global gpsp
 os.system('clear') #clear the terminal (optional)
 
 #configure logging
-logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode='a')
+logging.basicConfig(level=logging.INFO, format='%(message)s', datefmt='', filename=LOG_FILE, filemode='a') #for writing to local file
+
+# *** possibility: a syslog filter ***
+# rather than dumping everything forwarded to this service to a file we can fire it right back to to the local syslog server and route the 
+# log that way.  though this leads to duplication if we are not careful
+# ***
+#logging.handlers.SysLogHandler(address=('localhost', 514),facility=LOG_USER, socktype=socket.SOCK_DGRAM) #open syslog connection back to main server with gps encrusted input
+#syslogger = logging.getLogger()
+#logging.warn("Hello world")
 
 if __name__ == "__main__":
         try:
