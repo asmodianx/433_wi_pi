@@ -7,3 +7,5 @@ SuccessExitStatus=0 1
 ExecStart=/usr/local/bin/kismet_service.sh
 Restart=always
 RestartSec=5
+[Install]
+WantedBy=multi-user.target
