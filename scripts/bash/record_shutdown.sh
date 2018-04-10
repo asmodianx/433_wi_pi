@@ -5,8 +5,9 @@ date=`date +%Y%m%d_%H%M`
 if [ -f /tmp/shutdown ]; then
         echo "Already shutting down"
 else
-        touch /tmp/shutdown
+
         if [ $BUTTON = "1" ]; then
+                touch /tmp/shutdown
                 service kismet stop
                 service rtl_433 stop
                 killall rtl_433
