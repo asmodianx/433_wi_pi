@@ -8,4 +8,4 @@ ExecStart=/usr/local/bin/rtl_433.sh
 Restart=always
 RestartSec=3
 [Install]
-WantedBy=multi-user.targetmake install
+WantedBy=multi-user.target
